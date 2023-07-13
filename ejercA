@@ -1,0 +1,26 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> vec;
+    int numero;
+    
+    while (std::cin >> numero) {
+        vec.push_back(numero);
+        std::sort(vec.begin(), vec.end());
+        
+        int size = vec.size();
+        int mediana;
+        
+        if (size % 2 == 0) {
+            mediana = (vec[size / 2 - 1] + vec[size / 2]) / 2;
+        } else {
+            mediana = vec[size / 2];
+        }
+        
+        std::cout << mediana << std::endl;
+    }
+    
+    return 0;
+}
