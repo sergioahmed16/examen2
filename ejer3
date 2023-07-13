@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+//considere usar algoritmo greedy(Voraz)
+/*withdraw(X){
+if( X == 0) return;
+Let Y be the highest valued coin that does not exceed X.
+Give the customer Y valued coin.
+withdraw(X-Y);
+}*/
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N;
+        cin >> N;
+
+        vector<long long> Array(N);
+        for (int i = 0; i < N; i++) {
+            cin >> Array[i];
+        }
+
+        long long Grande = Array[0];
+        int valuedcoin = 1;
+
+        for (int i = 1; i < N - 1; i++) {
+            //ALGORITMO DE GREEDY
+            if (Grande + Array[i] < Array[i + 1]) {
+                Grande += Array[i];
+                valuedcoin++;
+            }
+        }
+
+        valuedcoin++;
+        cout << valuedcoin << endl;
+    }
+
+    return 0;
+}
