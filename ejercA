@@ -3,7 +3,7 @@
 using namespace std;
 
 int knapsack(int n, int M, const vector<int>& b, const vector<int>& p) {
-    // Arreglo para resultados inmediatos
+    // Arreglo para resultados inmediatoss
     vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
 
     // Dynamic programming por subproblemas
