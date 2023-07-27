@@ -1,26 +1,35 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+using namespace std;
+
+int knapsack(int n, int M, const vector<int>& b, const vector<int>& p) {
+    // Arreglo para resultados inmediatos
+    vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
+
+    // Dynamic programming por subproblemas
+    for (int i = 1; i <= n; i++) {
+        for (int w = 1; w <= M; w++) {
+            if (b[i - 1] <= w) {
+                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - b[i - 1]] + p[i - 1]);
+            } else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+
+    //Resultado final:
+    return dp[n][M];
+}
 
 int main() {
-    std::vector<int> vec;
-    int numero;
-    
-    while (std::cin >> numero) {
-        vec.push_back(numero);
-        std::sort(vec.begin(), vec.end());
-        
-        int size = vec.size();
-        int mediana;
-        
-        if (size % 2 == 0) {
-            mediana = (vec[size / 2 - 1] + vec[size / 2]) / 2;
-        } else {
-            mediana = vec[size / 2];
-        }
-        
-        std::cout << mediana << std::endl;
-    }
-    
+    int n = 4;
+    int M = 7;
+
+    vector<int> b = {2, 3, 4, 5};
+    vector<int> p = {1, 2, 3, 4};
+
+    int maxProfit = knapsack(n, M, b, p);
+    cout << "Maximo: " << maxProfit << endl;
+
     return 0;
 }
