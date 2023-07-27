@@ -1,87 +1,36 @@
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include <limits>
-#include <algorithm>
+using namespace std;
 
-#include <cstring>
-#include <string>
-#include <cstdio>
-#include <set>
-#include <iomanip>
+const int INF = 1e9; // Valor infinito para inicializar el arreglo de soluciones.
 
-struct Point {
-    int x;
-    int y;
-};
+int minimoMonedas(int n, int P, int c[]) {
+    int dp[P + 1]; // Arreglo para almacenar las soluciones óptimas.
 
-double euclideanDistance(const Point& p1, const Point& p2) {
-    int dx = p2.x - p1.x;
-    int dy = p2.y - p1.y;
-    return std::sqrt(dx * dx + dy * dy);
-}
-
-double closestPointsUtil(const std::vector<Point>& points, int left, int right) {
-    if (left >= right)
-        return std::numeric_limits<double>::max();
-
-    if (right - left == 1)
-        return euclideanDistance(points[left], points[right]);
-
-    int mid = (left + right) / 2;
-    double leftDist = closestPointsUtil(points, left, mid);
-    double rightDist = closestPointsUtil(points, mid + 1, right);
-    double minDist = std::min(leftDist, rightDist);
-
-    std::vector<Point> stripPoints;
-
-    for (int i = left; i <= right; ++i) {
-        int dx = points[i].x - points[mid].x;
-        if (std::abs(dx) < minDist)
-            stripPoints.push_back(points[i]);
+    // Inicializar el arreglo con un valor infinito, excepto la posición dp[0].
+    for (int i = 1; i <= P; i++) {
+        dp[i] = INF;
     }
+    dp[0] = 0; // No se necesitan monedas para formar una suma de 0.
 
-    std::sort(stripPoints.begin(), stripPoints.end(), [](const Point& p1, const Point& p2) {
-        return p1.y < p2.y;
-    });
-
-    int size = stripPoints.size();
-    for (int i = 0; i < size; ++i) {
-        for (int j = i + 1; j < size && stripPoints[j].y - stripPoints[i].y < minDist; ++j) {
-            double dist = euclideanDistance(stripPoints[i], stripPoints[j]);
-            minDist = std::min(minDist, dist);
+    // Calcular la cantidad mínima de monedas necesarias para cada suma posible.
+    for (int i = 1; i <= P; i++) {
+        for (int j = 0; j < n; j++) {
+            if (c[j] <= i) {
+                dp[i] = min(dp[i], dp[i - c[j]] + 1);
+            }
         }
     }
 
-    return minDist;
-}
-
-double closestPoints(const std::vector<Point>& points) {
-    int n = points.size();
-    std::vector<Point> sortedPoints = points;
-    std::sort(sortedPoints.begin(), sortedPoints.end(), [](const Point& p1, const Point& p2) {
-        return p1.x < p2.x;
-    });
-
-    return closestPointsUtil(sortedPoints, 0, n - 1);
+    return dp[P];
 }
 
 int main() {
-    int n;
-    while (std::cin >> n && n != 0) {
-        std::vector<Point> points(n);
-        for (int i = 0; i < n; ++i) {
-            std::cin >> points[i].x >> points[i].y;
-        }
+    int n = 3; // Cantidad de monedas disponibles
+    int P = 8; // Suma deseada
+    int c[] = {1, 4, 6}; // Valores de las monedas
 
-        double minDistance = closestPoints(points);
-
-        if (minDistance < 10000.0) {
-            std::cout << std::fixed << std::setprecision(4) << minDistance << std::endl;
-        } else {
-            std::cout << "INFINITY" << std::endl;
-        }
-    }
+    int resultado = minimoMonedas(n, P, c);
+    cout << "Cantidad mínima de monedas necesarias: " << resultado << endl;
 
     return 0;
 }
